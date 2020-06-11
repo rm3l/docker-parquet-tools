@@ -17,11 +17,12 @@ RUN apt-get update && \
       libssl-dev \
       libtool \
       make \
+      cmake \
       pkg-config \
   && rm -rf /var/lib/apt/lists/*
-ARG THRIFT_VERSION=0.13.0
-RUN wget -qO- https://apache.mediamirrors.org/thrift/${THRIFT_VERSION}/thrift-${THRIFT_VERSION}.tar.gz | tar xzvf - -C /opt/thrift
-WORKDIR /opt/thrift
+ARG THRIFT_VERSION=0.12.0
+RUN wget -qO- https://apache.mediamirrors.org/thrift/${THRIFT_VERSION}/thrift-${THRIFT_VERSION}.tar.gz | tar xzvf - -C /opt \
+  && mv /opt/thrift-${THRIFT_VERSION} /opt/thrift
 RUN mkdir /tmp/cmake-build && cd /tmp/cmake-build \
     && cmake \
        -DBUILD_COMPILER=ON \
@@ -74,6 +75,7 @@ RUN microdnf install curl ca-certificates ${JAVA_PACKAGE} \
     && chmod 540 /deployments/run-java.sh \
     && echo "securerandom.source=file:/dev/urandom" >> /etc/alternatives/jre/lib/security/java.security
 
+COPY --from=builder /usr/local/bin/thrift /usr/local/bin/thrift
 COPY --from=builder /parquet-mr/parquet-tools/target/parquet-tools-*.jar /deployments/app.jar
 
 ENV JAVA_OPTIONS="-XX:-UsePerfData"
