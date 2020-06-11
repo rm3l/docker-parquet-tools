@@ -51,8 +51,7 @@ RUN if [ "$PROFILE" = "hadoop" ] ; then \
       ${MVN_OPTIONS} \
       -am -pl \
       :parquet-generator,:parquet-common,:parquet-jackson,:parquet-column,:parquet-encoding,:parquet-hadoop,:parquet-tools
-
-RUN ls -lhrt /parquet-mr/parquet-tools/target/parquet-tools-*.jar
+RUN rm -rf /parquet-mr/parquet-tools/target/parquet-tools-*-tests.jar
 
 FROM registry.access.redhat.com/ubi8/ubi-minimal:8.2
 
