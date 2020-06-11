@@ -34,8 +34,6 @@ RUN mkdir /tmp/cmake-build && cd /tmp/cmake-build \
     && make install \
     && rm -rf /tmp/* /var/lib/apt/lists/*
 
-RUN which thrift
-
 ARG BRANCH=master
 RUN git clone --single-branch --depth=1 --branch=${BRANCH} https://github.com/apache/parquet-mr.git
 WORKDIR /parquet-mr
@@ -49,10 +47,12 @@ RUN if [ "$PROFILE" = "hadoop" ] ; then \
       export MVN_OPTIONS="-Plocal"; \
     fi \
     && mvn --batch-mode -DskipTests \
-      package \
+      clean package \
       ${MVN_OPTIONS} \
       -am -pl \
       :parquet-generator,:parquet-common,:parquet-jackson,:parquet-column,:parquet-encoding,:parquet-hadoop,:parquet-tools
+
+RUN ls -lhrt /parquet-mr/parquet-tools/target/parquet-tools-*.jar
 
 FROM registry.access.redhat.com/ubi8/ubi-minimal:8.2
 
