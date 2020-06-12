@@ -44,7 +44,7 @@ jobs:
         username: ${{ secrets.DOCKER_HUB_USERNAME }}
         password: ${{ secrets.DOCKER_HUB_PASSWORD }}
         repository: rm3l/parquet-tools
-        cache_froms: rm3l/parquet-tools:latest
+        cache_froms: rm3l/parquet-tools:hadoop-latest
         build_args: PROFILE=hadoop
         push: ${{ github.event_name == 'push' && (github.ref == 'refs/heads/master' || startsWith(github.ref, 'refs/tags/')) }}
         tags: hadoop-latest,hadoop-${{ steps.refvar.outputs.gitRefName }}
