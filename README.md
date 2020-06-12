@@ -9,16 +9,18 @@
 
 ## Motivations
 
-At this time, using the [Apache Parquet Tools](https://github.com/apache/parquet-mr/tree/master/parquet-tools) CLI requires either downloading a pre-built JAR file from a public Maven repository, or building it manually (for example if you need a more recent version).
-Building it however requires few operations and dependencies that can easily fit into a Dockerfile, so as to be reusable anywhere.
+At this time, using the [Apache Parquet Tools](https://github.com/apache/parquet-mr/tree/master/parquet-tools) CLI requires either:
+- downloading a [pre-built JAR file](https://repo1.maven.org/maven2/org/apache/parquet/parquet-tools/1.11.0/) from a public Maven repository. But, as far as I know, only the Hadoop mode is built, which means that the Hadoop client dependency is not included in the JAR;
+- or building it manually, for example if you need a version not released yet.
+Building it however requires few operations and dependencies that can easily fit into a Dockerfile, so as to be reusable elsewhere.
 
-This repository provides a quite simple public Docker image that builds the [Apache Parquet Tools](https://github.com/apache/parquet-mr/tree/master/parquet-tools) CLI.
+This repository provides a quite simple public Docker image that builds the [Apache Parquet Tools](https://github.com/apache/parquet-mr/tree/master/parquet-tools) CLI for both Local and Hadoop modes.
 In the end, the Docker image allows to use the CLI in a quite straightfoward manner.
 
 ## Example Usage
 
 ```bash
-docker container run -v /tmp/data:/data --rm -t rm3l/parquet-tools schema /data/<myFile>.parquet
+docker container run -v /tmp/data:/data --rm -t rm3l/parquet-tools:latest schema /data/<myFile>.parquet
 ```
 
 ## Developed by
