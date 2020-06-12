@@ -8,23 +8,46 @@ on:
   pull_request:
     branches: [ master ]
 
+env:
+  DOCKER_BUILDKIT: 1
+
 jobs:
 
-  build_tag_push:
-
+  build_local:
+    name: Local Mode
     runs-on: ubuntu-latest
-
     steps:
     - uses: actions/checkout@v2
-
+    - name: Retrieve branch or tag name
+        id: refvar
+        run: echo "::set-output name=gitRefName::${GITHUB_REF#refs/*/}"
     - uses: docker/build-push-action@v1
       with:
         username: ${{ secrets.DOCKER_HUB_USERNAME }}
         password: ${{ secrets.DOCKER_HUB_PASSWORD }}
         repository: rm3l/parquet-tools
         cache_froms: rm3l/parquet-tools:latest
-        tag_with_ref: true
-        #push: ${{ github.event_name == 'push' && (github.ref == 'refs/heads/master' || startsWith(github.ref, 'refs/tags/')) }}
-        push: true
+        tags: latest,${{ steps.refvar.outputs.gitRefName }}
+        push: ${{ github.event_name == 'push' && (github.ref == 'refs/heads/master' || startsWith(github.ref, 'refs/tags/')) }}
         add_git_labels: true
+
+  build_hadoop:
+    name: Hadoop Mode
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+    - name: Retrieve branch or tag name
+        id: refvar
+        run: echo "::set-output name=gitRefName::${GITHUB_REF#refs/*/}"
+    - uses: docker/build-push-action@v1
+      with:
+        username: ${{ secrets.DOCKER_HUB_USERNAME }}
+        password: ${{ secrets.DOCKER_HUB_PASSWORD }}
+        repository: rm3l/parquet-tools
+        cache_froms: rm3l/parquet-tools:latest
+        build_args: PROFILE=hadoop
+        push: ${{ github.event_name == 'push' && (github.ref == 'refs/heads/master' || startsWith(github.ref, 'refs/tags/')) }}
+        tags: hadoop-latest,hadoop-${{ steps.refvar.outputs.gitRefName }}
+        add_git_labels: true
+
 
