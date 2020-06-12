@@ -19,8 +19,8 @@ jobs:
     steps:
     - uses: actions/checkout@v2
     - name: Retrieve branch or tag name
-        id: refvar
-        run: echo "::set-output name=gitRefName::${GITHUB_REF#refs/*/}"
+      id: refvar
+      run: echo "::set-output name=gitRefName::${GITHUB_REF#refs/*/}"
     - uses: docker/build-push-action@v1
       with:
         username: ${{ secrets.DOCKER_HUB_USERNAME }}
@@ -37,8 +37,8 @@ jobs:
     steps:
     - uses: actions/checkout@v2
     - name: Retrieve branch or tag name
-        id: refvar
-        run: echo "::set-output name=gitRefName::${GITHUB_REF#refs/*/}"
+      id: refvar
+      run: echo "::set-output name=gitRefName::${GITHUB_REF#refs/*/}"
     - uses: docker/build-push-action@v1
       with:
         username: ${{ secrets.DOCKER_HUB_USERNAME }}
